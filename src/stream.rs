@@ -14,6 +14,10 @@ pub(crate) struct EventStream {
     url: Url,
     buffer: VecDeque<Event>,
     interval: Option<Interval>,
+    /// 休眠时间（毫秒）
+    ///
+    /// sleep 字段用于优化比较, 和 interval 一样
+    sleep: u64,
     token: String,
     p_cursor: String,
 }
@@ -26,6 +30,7 @@ impl EventStream {
             url: poll_url,
             buffer: VecDeque::with_capacity(200),
             interval: None,
+            sleep: 0,
             token,
             p_cursor: "".to_string(),
         })
@@ -48,8 +53,9 @@ impl EventStream {
                         log::error!("receive event error: {e}");
                     }
                     Ok(Some(resp)) => {
-                        if resp.sleep != self.interval.as_ref().map(|t| t.period().as_millis()).unwrap_or(0) as u64 {
+                        if resp.sleep != self.sleep {
                             log::info!("update sleep: {} ms", resp.sleep);
+                            self.sleep = resp.sleep;
                             if resp.sleep > 0 {
                                 let mut t = tokio::time::interval(Duration::from_millis(resp.sleep));
                                 t.set_missed_tick_behavior(MissedTickBehavior::Delay);

@@ -42,13 +42,13 @@ pub struct DisconnectParams {
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct User {
-    // openid
+    /// openid
     pub id: String,
-    // 昵称
+    /// 昵称
     pub user_name: Option<String>,
-    // 头像url
+    /// 头像url
     pub head_url: Option<String>,
-    // 性别
+    /// 性别
     pub gender: Option<String>,
 }
 
