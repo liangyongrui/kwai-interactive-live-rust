@@ -1,17 +1,16 @@
 use anyhow::bail;
 use reqwest::Url;
-use serde::de::DeserializeOwned;
-use serde::Serialize;
 use serde_json::Value;
 
 use crate::event::Event;
-use crate::{ConnectParams, ConnectResp, DisconnectParams};
+use crate::{ConnectReq, ConnectResp, DisconnectParams};
 
-async fn post<Req: Serialize, Resp: DeserializeOwned>(
-    url: Url,
-    params: &Req,
-) -> anyhow::Result<Resp> {
-    let client = reqwest::Client::new();
+pub(crate) async fn connect(
+    client: &reqwest::Client,
+    params: &ConnectReq,
+) -> anyhow::Result<ConnectResp> {
+    let mut url = Url::parse("https://example.com/openapi/sdk/v1/connect")?;
+    url.set_host(Some(&params.host))?;
     let response = client.post(url).json(params).send().await?;
     let value = response.json::<serde_json::Value>().await?;
     let result = value.get("result").and_then(|t| t.as_u64()).unwrap_or(0);
@@ -19,12 +18,6 @@ async fn post<Req: Serialize, Resp: DeserializeOwned>(
         bail!("response: {value}")
     }
     Ok(serde_json::from_value(value)?)
-}
-
-pub(crate) async fn connect(params: &ConnectParams) -> anyhow::Result<ConnectResp> {
-    let mut url = Url::parse("https://example.com/openapi/sdk/v1/connect")?;
-    url.set_host(Some(&params.host))?;
-    post(url, params).await
 }
 
 pub(crate) async fn disconnect(params: &DisconnectParams) -> anyhow::Result<()> {
@@ -54,12 +47,12 @@ pub(crate) struct PollResp {
 }
 
 pub(crate) async fn poll(
+    client: &reqwest::Client,
     url: Url,
     token: &str,
     p_cursor: &str,
     len: u32,
 ) -> anyhow::Result<Option<PollResp>> {
-    let client = reqwest::Client::new();
     let response = client
         .get(url)
         .query(&[

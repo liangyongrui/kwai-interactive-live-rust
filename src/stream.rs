@@ -11,6 +11,7 @@ use crate::kwai;
 
 #[derive(Debug)]
 pub(crate) struct EventStream {
+    http_client: reqwest::Client,
     url: Url,
     buffer: VecDeque<Event>,
     interval: Option<Interval>,
@@ -23,10 +24,15 @@ pub(crate) struct EventStream {
 }
 
 impl EventStream {
-    pub(crate) fn new(host: &str, token: String) -> anyhow::Result<Self> {
+    pub(crate) fn new(
+        http_client: reqwest::Client,
+        host: &str,
+        token: String,
+    ) -> anyhow::Result<Self> {
         let mut poll_url = Url::parse("https://example.com/openapi/sdk/v1/poll")?;
         poll_url.set_host(Some(host))?;
         Ok(EventStream {
+            http_client,
             url: poll_url,
             buffer: VecDeque::with_capacity(200),
             interval: None,
@@ -45,7 +51,7 @@ impl EventStream {
                 if let Some(t) = &mut self.interval {
                     t.tick().await;
                 }
-                let resp = kwai::poll(self.url.clone(), &self.token, &self.p_cursor, 200).await;
+                let resp = kwai::poll(&self.http_client, self.url.clone(), &self.token, &self.p_cursor, 200).await;
                 match resp {
                     // disconnect
                     Ok(None) => break,

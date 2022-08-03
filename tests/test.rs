@@ -18,7 +18,7 @@ async fn test() -> anyhow::Result<()> {
         code: "code".to_string(),
         ..Default::default()
     };
-    let (resp, stream) = connect(&p).await?;
+    let (resp, stream) = connect(p).await?;
     tokio::spawn(async {
         stream
             .for_each(|event| async move {
