@@ -1,5 +1,7 @@
-use std::collections::VecDeque;
-use std::time::Duration;
+extern crate alloc;
+
+use alloc::collections::VecDeque;
+use core::time::Duration;
 
 use async_stream::stream;
 use futures_lite::stream::Stream;
@@ -9,6 +11,9 @@ use tokio::time::{Interval, MissedTickBehavior};
 use crate::event::Event;
 use crate::kwai;
 
+/// 用于构建事件流的状态
+///
+/// 获取后，只能用于一件事 `.into_stream()`
 #[derive(Debug)]
 pub struct EventStream {
     http_client: reqwest::Client,
@@ -38,10 +43,12 @@ impl EventStream {
             interval: None,
             sleep: 0,
             token,
-            p_cursor: "".to_string(),
+            p_cursor: "".to_owned(),
         })
     }
 
+    /// 转换成异步流
+    #[inline]
     pub fn into_stream(mut self) -> impl Stream<Item = Event> {
         stream! {
             loop {

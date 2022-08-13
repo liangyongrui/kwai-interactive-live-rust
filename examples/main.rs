@@ -1,5 +1,6 @@
 //! sdk demo
-use std::time::Duration;
+#![allow(clippy::restriction)]
+use core::time::Duration;
 
 use futures_lite::stream::StreamExt;
 use kwai_interactive_live::{connect, disconnect, ConnectParams, DisconnectParams, Event};

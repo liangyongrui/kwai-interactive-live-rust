@@ -1,26 +1,38 @@
 use anyhow::bail;
 use reqwest::Url;
+use serde::Serialize;
 use serde_json::Value;
 
 use crate::event::Event;
-use crate::{ConnectReq, ConnectResp, DisconnectParams};
+use crate::{ConnectResp, DisconnectParams};
 
-pub(crate) async fn connect(
-    client: &reqwest::Client,
-    params: &ConnectReq,
-) -> anyhow::Result<ConnectResp> {
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct ConnectReq {
+    /// 快手的域名
+    pub host: String,
+    pub app_id: String,
+    pub code: String,
+    pub play_id: u32,
+    /// 游戏中的头像url
+    pub header: Option<String>,
+    /// 游戏中的角色名称
+    pub role_name: Option<String>,
+}
+
+pub async fn connect(client: &reqwest::Client, params: &ConnectReq) -> anyhow::Result<ConnectResp> {
     let mut url = Url::parse("https://example.com/openapi/sdk/v1/connect")?;
     url.set_host(Some(&params.host))?;
     let response = client.post(url).json(params).send().await?;
     let value = response.json::<serde_json::Value>().await?;
-    let result = value.get("result").and_then(|t| t.as_u64()).unwrap_or(0);
+    let result = value.get("result").and_then(Value::as_u64).unwrap_or(0);
     if result != 1 {
         bail!("response: {value}")
     }
     Ok(serde_json::from_value(value)?)
 }
 
-pub(crate) async fn disconnect(params: &DisconnectParams) -> anyhow::Result<()> {
+pub async fn disconnect(params: &DisconnectParams) -> anyhow::Result<()> {
     let mut url = Url::parse("https://example.com/openapi/sdk/v1/disconnect")?;
     url.set_host(Some(&params.host))?;
 
@@ -31,7 +43,7 @@ pub(crate) async fn disconnect(params: &DisconnectParams) -> anyhow::Result<()> 
         .send()
         .await?;
     let value = response.json::<Value>().await?;
-    let result = value.get("result").and_then(|t| t.as_u64()).unwrap_or(0);
+    let result = value.get("result").and_then(Value::as_u64).unwrap_or(0);
     if result != 1 {
         bail!("response: {value}")
     }
@@ -39,14 +51,14 @@ pub(crate) async fn disconnect(params: &DisconnectParams) -> anyhow::Result<()> 
 }
 
 #[derive(Debug)]
-pub(crate) struct PollResp {
+pub struct PollResp {
     pub p_cursor: String,
     /// 休息的毫秒数
     pub sleep: u64,
     pub data: Vec<Event>,
 }
 
-pub(crate) async fn poll(
+pub async fn poll(
     client: &reqwest::Client,
     url: Url,
     token: &str,
@@ -63,28 +75,29 @@ pub(crate) async fn poll(
         .send()
         .await?;
     let value = response.json::<Value>().await?;
-    let result = value.get("result").and_then(|t| t.as_u64()).unwrap_or(0);
+    let result = value.get("result").and_then(Value::as_u64).unwrap_or(0);
     let value: Option<Value> = match result {
         1 => serde_json::from_value(value)?,
         2 => return Ok(None),
         _ => bail!("response: {value}"),
     };
-    if value.is_none() {
+    let value = if let Some(value) = value {
+        value
+    } else {
         return Ok(None);
-    }
-    let value = value.unwrap();
+    };
 
     let resp = PollResp {
         p_cursor: value
             .get("pCursor")
-            .and_then(|t| t.as_str())
+            .and_then(Value::as_str)
             .unwrap_or("")
-            .to_string(),
-        sleep: value.get("sleep").and_then(|t| t.as_u64()).unwrap_or(0),
+            .to_owned(),
+        sleep: value.get("sleep").and_then(Value::as_u64).unwrap_or(0),
         data: value
             .get("data")
-            .and_then(|t| t.as_array())
-            .map(|t| t.iter().map(|x| x.into()).collect())
+            .and_then(Value::as_array)
+            .map(|t| t.iter().map(Into::into).collect())
             .unwrap_or_default(),
     };
     Ok(Some(resp))

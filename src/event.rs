@@ -4,6 +4,7 @@ use serde_json::Value;
 
 use crate::User;
 
+/// 快手推送的各种event
 #[derive(Debug)]
 pub enum Event {
     /// 送礼
@@ -22,6 +23,7 @@ pub enum Event {
     Unknown(Value, Error),
 }
 
+/// 礼物
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Gift {
@@ -37,28 +39,39 @@ pub struct Gift {
     pub count: u32,
 }
 
+/// 评论
 #[derive(Deserialize, Debug)]
 pub struct Comment {
+    /// 观众信息
     pub user: User,
     /// 弹幕内容
     pub content: String,
 }
+
+/// 点赞
 #[derive(Deserialize, Debug)]
 pub struct Like {
+    /// 观众信息
     pub user: User,
     /// 点赞个数
     pub count: u32,
 }
 
+/// 分享
 #[derive(Deserialize, Debug)]
 pub struct Share {
-    pub user: User,
-}
-#[derive(Deserialize, Debug)]
-pub struct Follow {
+    /// 观众信息
     pub user: User,
 }
 
+/// 关注
+#[derive(Deserialize, Debug)]
+pub struct Follow {
+    /// 观众信息
+    pub user: User,
+}
+
+/// 任务
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Task {
@@ -69,16 +82,17 @@ pub struct Task {
 }
 
 impl From<&Value> for Event {
+    #[inline]
     fn from(value: &Value) -> Self {
         match parse(value) {
             Ok(e) => e,
-            Err(e) => Event::Unknown(value.clone(), e),
+            Err(e) => Self::Unknown(value.clone(), e),
         }
     }
 }
 
 fn parse(value: &Value) -> anyhow::Result<Event> {
-    let cmd = value.get("cmd").and_then(|t| t.as_u64()).unwrap_or(0);
+    let cmd = value.get("cmd").and_then(Value::as_u64).unwrap_or(0);
     let payload = value.get("payload").unwrap_or(&Value::Null);
     match cmd {
         2 => Ok(Event::Gift(serde_json::from_value(payload.clone())?)),

@@ -1,0 +1,23 @@
+[target.'cfg(all())']
+rustflags = [
+  "-Dwarnings",
+  "-Dfuture-incompatible",
+  "-Dnonstandard-style",
+  "-Wunused",
+  "-Dmissing_crate_level_docs",
+  "-Dmissing_docs",
+  "-Dclippy::all",
+  "-Dclippy::pedantic",
+  "-Dclippy::nursery",
+  "-Dclippy::restriction", # "-Dclippy::cargo",
+  "-Aclippy::module-name-repetitions",
+  "-Aclippy::needless-pass-by-value",
+  "-Aclippy::use-self",
+  "-Aclippy::implicit-return",
+  "-Aclippy::missing_docs_in_private_items",
+  "-Aclippy::shadow_reuse",
+  "-Aclippy::shadow_unrelated",
+  "-Aclippy::pub-use",
+  "-Aclippy::exhaustive_structs",
+  "-Aclippy::exhaustive_enums",
+]
