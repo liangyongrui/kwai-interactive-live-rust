@@ -2,7 +2,7 @@ use std::collections::VecDeque;
 use std::time::Duration;
 
 use async_stream::stream;
-use futures::Stream;
+use futures_lite::stream::Stream;
 use reqwest::Url;
 use tokio::time::{Interval, MissedTickBehavior};
 
@@ -10,7 +10,7 @@ use crate::event::Event;
 use crate::kwai;
 
 #[derive(Debug)]
-pub(crate) struct EventStream {
+pub struct EventStream {
     http_client: reqwest::Client,
     url: Url,
     buffer: VecDeque<Event>,
@@ -42,7 +42,7 @@ impl EventStream {
         })
     }
 
-    pub(crate) fn into_stream(mut self) -> impl Stream<Item = Event> {
+    pub fn into_stream(mut self) -> impl Stream<Item = Event> {
         stream! {
             loop {
                 if let Some(t) = self.buffer.pop_back() {

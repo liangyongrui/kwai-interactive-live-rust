@@ -3,10 +3,9 @@ mod kwai;
 mod stream;
 
 pub use event::*;
-use futures::Stream;
 use reqwest::Proxy;
 use serde::{Deserialize, Serialize};
-use stream::EventStream;
+pub use stream::EventStream;
 
 #[derive(Default, Debug)]
 pub struct ConnectParams {
@@ -20,7 +19,7 @@ pub struct ConnectParams {
     /// 游戏中的角色名称
     pub role_name: Option<String>,
     /// http 代理
-    pub http_proxys: Vec<Proxy>,
+    pub http_proxies: Vec<Proxy>,
 }
 
 #[derive(Serialize, Debug)]
@@ -71,9 +70,7 @@ pub struct User {
 /// 建立连接
 ///
 /// 返回主播信息 和 一个接收消息的异步Stream
-pub async fn connect(
-    params: ConnectParams,
-) -> anyhow::Result<(ConnectResp, impl Stream<Item = Event>)> {
+pub async fn connect(params: ConnectParams) -> anyhow::Result<(ConnectResp, EventStream)> {
     let mut http_client_builder = reqwest::ClientBuilder::new();
     let req = ConnectReq {
         host: params.host,
@@ -83,13 +80,13 @@ pub async fn connect(
         header: params.header,
         role_name: params.role_name,
     };
-    for proxy in params.http_proxys {
+    for proxy in params.http_proxies {
         http_client_builder = http_client_builder.proxy(proxy);
     }
     let http_client = http_client_builder.build()?;
     let connect_resp = kwai::connect(&http_client, &req).await?;
     let stream = EventStream::new(http_client, &req.host, connect_resp.token.clone())?;
-    Ok((connect_resp, stream.into_stream()))
+    Ok((connect_resp, stream))
 }
 
 /// 断开连接

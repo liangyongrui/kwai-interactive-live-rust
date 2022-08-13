@@ -1,0 +1,17 @@
+[package]
+edition = "2021"
+name = "kwai_interactive_live_bevy_plugin"
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1"
+async-compat = "0.2"
+bevy = "0.8"
+crossbeam-channel = "0.5"
+env_logger = "0.9"
+futures-lite = "1"
+kwai_interactive_live = {path = "../../"}
+log = "0.4"
+rand = "0.8"
