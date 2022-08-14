@@ -15,6 +15,7 @@
     ```toml
     [dependencies]
     kwai_interactive_live = "*"
+    futures-lite = "1"
     ```
 
 1. 建立连接, 并返回一个异步流
