@@ -67,7 +67,7 @@ impl EventStream {
                     }
                     Ok(Some(resp)) => {
                         if resp.sleep != self.sleep {
-                            log::info!("update sleep: {} ms", resp.sleep);
+                            log::debug!("update sleep: {} ms", resp.sleep);
                             self.sleep = resp.sleep;
                             if resp.sleep > 0 {
                                 let mut t = tokio::time::interval(Duration::from_millis(resp.sleep));

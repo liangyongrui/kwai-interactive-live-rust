@@ -1,10 +1,13 @@
 [package]
-edition = "2021"
 name = "kwai_interactive_live_bevy_plugin"
 version = "0.1.0"
+description = "快手互动直播bevy sdk"
+edition = "2021"
+keywords = ['async', 'game']
+license = 'MIT OR Apache-2.0'
+readme = 'readme.md'
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 anyhow = "1"
 async-compat = "0.2"
@@ -13,7 +16,7 @@ bevy_ecs = "0.8"
 bevy_tasks = "0.8"
 crossbeam-channel = "0.5"
 futures-lite = "1"
-kwai_interactive_live = {path = "../../"}
+kwai_interactive_live = { path = "../../" }
 log = "0.4"
 
 [dev-dependencies]
