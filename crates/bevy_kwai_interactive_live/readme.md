@@ -13,4 +13,4 @@
    bevy_kwai_interactive_live = "*"
    ```
 
-1. [examples](https://github.com/interactive-live/kwai-interactive-live-rust/blob/main/crates/bevy_kwai_interactive_live/examples/main.rs)
+1. [examples](https://github.com/liangyongrui/kwai-interactive-live-rust/blob/main/crates/bevy_kwai_interactive_live/examples/main.rs)

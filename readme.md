@@ -52,8 +52,8 @@
 
 ### 更多的用法
 
-1. [sdk examples](https://github.com/interactive-live/kwai-interactive-live-rust/blob/main/examples/main.rs)
-1. [bevy plugin examples](https://github.com/interactive-live/kwai-interactive-live-rust/blob/main/crates/bevy_kwai_interactive_live/examples/main.rs)
+1. [sdk examples](https://github.com/liangyongrui/kwai-interactive-live-rust/blob/main/examples/main.rs)
+1. [bevy plugin examples](https://github.com/liangyongrui/kwai-interactive-live-rust/blob/main/crates/bevy_kwai_interactive_live/examples/main.rs)
 
 ## License
 

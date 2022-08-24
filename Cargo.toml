@@ -5,7 +5,7 @@ keywords = ['async', 'game']
 license = 'MIT OR Apache-2.0'
 name = "kwai_interactive_live"
 readme = 'readme.md'
-version = "0.3.0"
+version = "0.3.1"
 
 [workspace]
 members = ["crates/*"]
