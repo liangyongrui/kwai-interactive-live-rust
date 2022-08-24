@@ -1,5 +1,5 @@
 [package]
-name = "kwai_interactive_live_bevy_plugin"
+name = "bevy_kwai_interactive_live"
 version = "0.1.0"
 description = "快手互动直播bevy sdk"
 edition = "2021"

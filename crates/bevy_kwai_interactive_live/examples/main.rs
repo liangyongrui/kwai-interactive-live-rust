@@ -2,7 +2,7 @@
 
 #![allow(clippy::restriction)]
 use bevy::prelude::*;
-use kwai_interactive_live_bevy_plugin::{
+use bevy_kwai_interactive_live::{
     connect, ConnectErrEvent, ConnectParams, EventReceiver, KwaiPlugin,
 };
 
