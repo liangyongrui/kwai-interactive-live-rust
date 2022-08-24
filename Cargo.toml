@@ -6,6 +6,7 @@ license = 'MIT OR Apache-2.0'
 name = "kwai_interactive_live"
 readme = 'readme.md'
 version = "0.3.1"
+repository = "https://github.com/liangyongrui/kwai-interactive-live-rust"
 
 [workspace]
 members = ["crates/*"]
@@ -15,11 +16,11 @@ anyhow = "1"
 async-stream = "0.3"
 futures-lite = "1"
 log = "0.4"
-reqwest = {version = "0.11", features = ["json"]}
-serde = {version = "1", features = ["derive"]}
+reqwest = { version = "0.11", features = ["json"] }
+serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-tokio = {version = "1", features = ["time"]}
+tokio = { version = "1", features = ["time"] }
 
 [dev-dependencies]
 env_logger = "0.9"
-tokio = {version = "1", features = ["full"]}
+tokio = { version = "1", features = ["full"] }

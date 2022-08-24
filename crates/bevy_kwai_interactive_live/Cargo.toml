@@ -6,6 +6,7 @@ edition = "2021"
 keywords = ['async', 'game']
 license = 'MIT OR Apache-2.0'
 readme = 'readme.md'
+repository = "https://github.com/liangyongrui/kwai-interactive-live-rust"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
