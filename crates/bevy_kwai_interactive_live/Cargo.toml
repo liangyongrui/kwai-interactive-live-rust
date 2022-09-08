@@ -22,3 +22,6 @@ log = "0.4"
 
 [dev-dependencies]
 bevy = "0.8"
+kayak_ui = { git = "https://github.com/StarArawn/kayak_ui", features = [
+    "bevy_renderer"
+] }

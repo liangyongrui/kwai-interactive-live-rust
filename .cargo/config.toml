@@ -1,6 +1,5 @@
 [target.'cfg(all())']
 rustflags = [
-  "-Dwarnings",
   "-Dfuture-incompatible",
   "-Dnonstandard-style",
   "-Wunused",
