@@ -43,7 +43,7 @@ impl EventStream {
             interval: None,
             sleep: 0,
             token,
-            p_cursor: "".to_owned(),
+            p_cursor: String::new(),
         })
     }
 
