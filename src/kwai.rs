@@ -81,12 +81,7 @@ pub async fn poll(
         2 => return Ok(None),
         _ => bail!("response: {value}"),
     };
-    let value = if let Some(value) = value {
-        value
-    } else {
-        return Ok(None);
-    };
-
+    let Some(value) = value else { return Ok(None); };
     let resp = PollResp {
         p_cursor: value
             .get("pCursor")
