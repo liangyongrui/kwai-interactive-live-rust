@@ -50,7 +50,7 @@ async fn main() {
 }
 
 async fn run(args: Args) -> anyhow::Result<()> {
-    let host = args.host.unwrap_or_else(|| prompt("输入域名"));
+    let host = args.host.unwrap_or_else(|| prompt("输入host"));
     let app_type = if let Some(a) = args.app_type {
         a
     } else {
@@ -59,7 +59,7 @@ async fn run(args: Args) -> anyhow::Result<()> {
     let play_id = if let Some(a) = args.play_id {
         a
     } else {
-        prompt("输入域名 playId").parse()?
+        prompt("输入 playId").parse()?
     };
     let p = ConnectParams {
         app_type,
