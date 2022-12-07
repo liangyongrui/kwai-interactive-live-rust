@@ -23,6 +23,9 @@ pub struct ConnectParams {
     ///
     /// 如果只有一个玩法可以不填(默认填0)
     pub play_id: u32,
+    /// 0 game
+    /// 1 tool
+    pub app_type: u8,
     /// 游戏中的头像url
     pub header: Option<String>,
     /// 游戏中的角色名称
@@ -88,6 +91,8 @@ pub async fn connect(params: ConnectParams) -> anyhow::Result<(ConnectResp, Even
         play_id: params.play_id,
         header: params.header,
         role_name: params.role_name,
+        app_type: params.app_type,
+        use_sdk: true,
     };
     for proxy in params.http_proxies {
         http_client_builder = http_client_builder.proxy(proxy);

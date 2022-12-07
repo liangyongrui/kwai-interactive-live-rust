@@ -21,3 +21,7 @@ rustflags = [
   "-Aclippy::exhaustive_structs",
   "-Aclippy::exhaustive_enums",
 ]
+
+# https://gist.github.com/Mefistophell/9787e1b6d2d9441c16d2ac79d6a505e6
+# [target.x86_64-pc-windows-gnu]
+# linker = "x86_64-w64-mingw32-gcc"

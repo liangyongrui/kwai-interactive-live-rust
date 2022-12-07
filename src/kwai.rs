@@ -14,6 +14,9 @@ pub struct ConnectReq {
     pub app_id: String,
     pub code: String,
     pub play_id: u32,
+    pub app_type: u8,
+    // always true
+    pub use_sdk: bool,
     /// 游戏中的头像url
     pub header: Option<String>,
     /// 游戏中的角色名称
